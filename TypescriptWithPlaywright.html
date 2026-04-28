@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeScript Learning Guide for SDETs | From Java/Selenium to Playwright</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1c2333;
+            --bg-code: #0d1117;
+            --border: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-orange: #d2991d;
+            --accent-purple: #bc8cff;
+            --accent-pink: #f778ba;
+            --accent-cyan: #39c5cf;
+            --accent-red: #f85149;
+            --accent-yellow: #e3b341;
+            --gradient-1: linear-gradient(135deg, #3178c6, #235a97);
+            --gradient-2: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --radius: 12px;
+            --radius-sm: 6px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ──────────────── NAVIGATION ──────────────── */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(13, 17, 23, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            gap: 1rem;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .navbar .logo .ts-badge {
+            background: var(--gradient-1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 0.3rem;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(88, 166, 255, 0.12);
+            color: var(--accent-blue);
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+            padding: 8px;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* ──────────────── HERO ──────────────── */
+        .hero {
+            background: var(--gradient-2);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(49, 120, 198, 0.25), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -120px;
+            left: -80px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(188, 140, 255, 0.2), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff, #bc8cff, #3fb950);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .hero .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .hero .badge-row {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        .badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .badge-java {
+            background: rgba(237, 139, 0, 0.2);
+            color: #f0883e;
+            border: 1px solid rgba(237, 139, 0, 0.3);
+        }
+        .badge-ts {
+            background: rgba(49, 120, 198, 0.2);
+            color: #58a6ff;
+            border: 1px solid rgba(49, 120, 198, 0.3);
+        }
+        .badge-pw {
+            background: rgba(63, 185, 80, 0.2);
+            color: #3fb950;
+            border: 1px solid rgba(63, 185, 80, 0.3);
+        }
+
+        /* ──────────────── MAIN LAYOUT ──────────────── */
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* ──────────────── SECTION STYLES ──────────────── */
+        .section {
+            margin-bottom: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .section:hover {
+            border-color: #4a5568;
+        }
+        .section-header {
+            background: var(--bg-secondary);
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .section-header .icon {
+            font-size: 1.4rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .icon-blue {
+            background: rgba(49, 120, 198, 0.2);
+        }
+        .icon-green {
+            background: rgba(63, 185, 80, 0.2);
+        }
+        .icon-purple {
+            background: rgba(188, 140, 255, 0.2);
+        }
+        .icon-orange {
+            background: rgba(210, 153, 29, 0.2);
+        }
+        .icon-pink {
+            background: rgba(247, 120, 186, 0.2);
+        }
+        .icon-cyan {
+            background: rgba(57, 197, 207, 0.2);
+        }
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        .section-header .toggle-icon {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        .section-body {
+            padding: 1.8rem;
+            display: block;
+        }
+        .section-body.collapsed {
+            display: none;
+        }
+        .section-body h3 {
+            color: var(--accent-blue);
+            margin: 1.5rem 0 0.7rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+        .section-body h3:first-child {
+            margin-top: 0;
+        }
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* ──────────────── CODE BLOCKS ──────────────── */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin: 1rem 0 1.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+        .code-block .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #1a1f2b;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .code-block .copy-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 4px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: var(--transition);
+        }
+        .code-block .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+        }
+        .code-block pre {
+            padding: 1.2rem 1.5rem;
+            margin: 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: #e6edf3;
+        }
+        .code-block code {
+            font-family: inherit;
+        }
+
+        /* Syntax highlighting */
+        .kw {
+            color: #ff7b72;
+            font-weight: 600;
+        }
+        .str {
+            color: #a5d6ff;
+        }
+        .num {
+            color: #79c0ff;
+        }
+        .cm {
+            color: #8b949e;
+            font-style: italic;
+        }
+        .fn {
+            color: #d2a8ff;
+        }
+        .tp {
+            color: #7ee787;
+        }
+        .op {
+            color: #ff7b72;
+        }
+        .var {
+            color: #ffa657;
+        }
+        .dt {
+            color: #f2cc60;
+        }
+        .pc {
+            color: #c9d1d9;
+        }
+
+        /* ──────────────── COMPARISON TABLE ──────────────── */
+        .comparison-table-wrap {
+            overflow-x: auto;
+            margin: 1.2rem 0;
+        }
+        table.comparison {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        table.comparison th,
+        table.comparison td {
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        table.comparison th {
+            background: var(--bg-secondary);
+            font-weight: 700;
+            color: var(--accent-blue);
+            white-space: nowrap;
+        }
+        table.comparison tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.015);
+        }
+        table.comparison td:first-child {
+            font-weight: 600;
+            color: var(--accent-orange);
+            white-space: nowrap;
+        }
+        table.comparison .check {
+            color: #3fb950;
+            font-weight: 700;
+        }
+        table.comparison .cross {
+            color: #f85149;
+        }
+
+        /* ──────────────── CALLOUT ──────────────── */
+        .callout {
+            border-left: 4px solid var(--accent-blue);
+            background: rgba(88, 166, 255, 0.07);
+            padding: 1rem 1.3rem;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin: 1.2rem 0;
+        }
+        .callout.tip {
+            border-left-color: var(--accent-green);
+            background: rgba(63, 185, 80, 0.07);
+        }
+        .callout.warning {
+            border-left-color: var(--accent-orange);
+            background: rgba(210, 153, 29, 0.07);
+        }
+        .callout strong {
+            color: var(--accent-blue);
+        }
+        .callout.tip strong {
+            color: var(--accent-green);
+        }
+        .callout.warning strong {
+            color: var(--accent-orange);
+        }
+
+        /* ──────────────── TAGS ──────────────── */
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            margin: 0 2px;
+        }
+        .tag-java {
+            background: rgba(237, 139, 0, 0.2);
+            color: #f0883e;
+        }
+        .tag-ts {
+            background: rgba(49, 120, 198, 0.25);
+            color: #58a6ff;
+        }
+        .tag-js {
+            background: rgba(247, 223, 30, 0.2);
+            color: #e3b341;
+        }
+
+        /* ──────────────── BACK TO TOP ──────────────── */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 16px rgba(88, 166, 255, 0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            pointer-events: none;
+            z-index: 999;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .back-to-top:hover {
+            background: #79b8ff;
+            transform: translateY(-3px);
+        }
+
+        /* ──────────────── RESPONSIVE ──────────────── */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: rgba(13, 17, 23, 0.98);
+                flex-direction: column;
+                padding: 1rem;
+                border-bottom: 1px solid var(--border);
+                gap: 0.2rem;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .hero {
+                padding: 2.5rem 1rem;
+            }
+            .section-body {
+                padding: 1.2rem;
+            }
+            .code-block pre {
+                padding: 0.9rem;
+                font-size: 0.78rem;
+            }
+            table.comparison {
+                font-size: 0.75rem;
+            }
+            table.comparison th,
+            table.comparison td {
+                padding: 0.5rem 0.6rem;
+            }
+        }
+
+        /* ──────────────── PRINT ──────────────── */
+        @media print {
+            .navbar,
+            .back-to-top,
+            .hamburger {
+                display: none;
+            }
+            body {
+                background: #fff;
+                color: #000;
+            }
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        /* Smooth fade-in */
+        .fade-in {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════ NAVIGATION ═══════════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            🟦 <span>TS Guide</span>
+            <span class="ts-badge">SDET Edition</span>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#intro">Intro</a></li>
+            <li><a href="#setup">Setup</a></li>
+            <li><a href="#types">Types</a></li>
+            <li><a href="#interfaces">Interfaces</a></li>
+            <li><a href="#classes">Classes</a></li>
+            <li><a href="#functions">Functions</a></li>
+            <li><a href="#generics">Generics</a></li>
+            <li><a href="#enums">Enums</a></li>
+            <li><a href="#advanced">Advanced</a></li>
+            <li><a href="#comparison">TS vs JS</a></li>
+            <li><a href="#playwright">Playwright</a></li>
+        </ul>
+    </nav>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <header class="hero">
+        <h1>TypeScript Mastery for SDETs</h1>
+        <p class="subtitle">
+            A comprehensive guide to transition from <strong>Java + Selenium + Rest Assured</strong>
+            to <strong>TypeScript + Playwright</strong>. Every concept explained with theory &amp; practical examples.
+        </p>
+        <div class="badge-row">
+            <span class="badge badge-java">☕ Java</span>
+            <span class="badge badge-ts">🔷 TypeScript</span>
+            <span class="badge badge-pw">🎭 Playwright</span>
+            <span class="badge badge-java">🧪 Selenium</span>
+            <span class="badge badge-pw">📡 Rest Assured → REST</span>
+        </div>
+    </header>
+
+    <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+    <div class="main-container">
+
+        <!-- ─── SECTION: Introduction ─── -->
+        <div class="section fade-in" id="intro">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-blue">📘</span>
+                <h2>1. What is TypeScript &amp; Why Should an SDET Care?</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    <strong>TypeScript (TS)</strong> is a <em>strongly typed superset of JavaScript</em> developed by Microsoft.
+                    It compiles down to plain JavaScript, meaning it runs anywhere JavaScript runs — browsers, Node.js, CI/CD pipelines.
+                    TypeScript adds <strong>static type checking</strong> at compile time, catching bugs before execution.
+                </p>
+                <p>
+                    For an SDET coming from <strong>Java</strong>, TypeScript feels familiar because:
+                </p>
+                <ul style="color:var(--text-secondary); padding-left:1.5rem; margin-bottom:1rem;">
+                    <li>It has <strong>types</strong> (like Java's <code>int</code>, <code>String</code>, <code>List&lt;T&gt;</code>)</li>
+                    <li>It supports <strong>Interfaces</strong>, <strong>Classes</strong>, <strong>Generics</strong>, and <strong>Enums</strong></li>
+                    <li>It provides <strong>access modifiers</strong> (<code>public</code>, <code>private</code>, <code>protected</code>)</li>
+                    <li>It enables <strong>OOP patterns</strong> you already know</li>
+                </ul>
+
+                <div class="callout tip">
+                    <strong>💡 SDET Tip:</strong> TypeScript + Playwright is the modern replacement for Java + Selenium.
+                    You get type safety, better IDE autocompletion, and fewer runtime errors in your test suites.
+                </div>
+
+                <h3>☕ Java vs 🔷 TypeScript — First Glance</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>Java (Selenium-style)</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">public class</span> <span class="tp">LoginTest</span> {
+    <span class="kw">private</span> <span class="tp">WebDriver</span> <span class="var">driver</span>;
+    <span class="kw">private</span> <span class="tp">String</span> <span class="var">baseUrl</span> = <span class="str">"https://example.com"</span>;
+
+    <span class="kw">public</span> <span class="tp">LoginTest</span>(<span class="tp">WebDriver</span> driver) {
+        <span class="pc">this</span>.driver = driver;
+    }
+
+    <span class="kw">public void</span> <span class="fn">login</span>(<span class="tp">String</span> username, <span class="tp">String</span> password) {
+        driver.findElement(<span class="tp">By</span>.id(<span class="str">"user"</span>)).sendKeys(username);
+        driver.findElement(<span class="tp">By</span>.id(<span class="str">"pass"</span>)).sendKeys(password);
+    }
+}</code></pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-header"><span>TypeScript (Playwright-style)</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">class</span> <span class="tp">LoginPage</span> {
+    <span class="kw">private</span> <span class="var">baseUrl</span>: <span class="tp">string</span> = <span class="str">'https://example.com'</span>;
+
+    <span class="kw">constructor</span>(<span class="kw">private</span> <span class="var">page</span>: <span class="tp">Page</span>) {}  <span class="cm">// shorthand!</span>
+
+    <span class="kw">async</span> <span class="fn">login</span>(<span class="var">username</span>: <span class="tp">string</span>, <span class="var">password</span>: <span class="tp">string</span>): <span class="tp">Promise</span>&lt;<span class="kw">void</span>&gt; {
+        <span class="kw">await</span> <span class="pc">this</span>.page.fill(<span class="str">'#user'</span>, username);
+        <span class="kw">await</span> <span class="pc">this</span>.page.fill(<span class="str">'#pass'</span>, password);
+    }
+}</code></pre>
+                </div>
+                <p>Notice the similarities: classes, constructors, type annotations. The <code>async/await</code> pattern in TS mirrors Java's <code>CompletableFuture</code> but is simpler.</p>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Setup ─── -->
+        <div class="section fade-in" id="setup">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-green">⚙️</span>
+                <h2>2. Setting Up TypeScript + Playwright (SDET Environment)</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory: The TypeScript Compiler</h3>
+                <p>
+                    TypeScript code (<code>.ts</code> files) is <strong>compiled</strong> to JavaScript (<code>.js</code>) using the
+                    <code>tsc</code> compiler. The configuration lives in <code>tsconfig.json</code>. You never ship <code>.ts</code>
+                    directly — the browser/Node runs the compiled JS.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header"><span>Terminal — Project Setup</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm"># 1. Initialize a Node.js project</span>
+npm init -y
+
+<span class="cm"># 2. Install TypeScript globally (optional) and locally</span>
+npm i -D typescript @types/node
+
+<span class="cm"># 3. Install Playwright for testing</span>
+npm i -D @playwright/test
+npx playwright install
+
+<span class="cm"># 4. Generate tsconfig.json</span>
+npx tsc --init</code></pre>
+                </div>
+
+                <h3>📄 tsconfig.json — Key Settings for SDETs</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>tsconfig.json</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code>{
+    <span class="str">"compilerOptions"</span>: {
+        <span class="str">"target"</span>: <span class="str">"ES2022"</span>,           <span class="cm">// Compile to modern JS</span>
+        <span class="str">"module"</span>: <span class="str">"commonjs"</span>,        <span class="cm">// Node.js module system</span>
+        <span class="str">"strict"</span>: <span class="kw">true</span>,              <span class="cm">// Enable ALL strict checks (recommended!)</span>
+        <span class="str">"esModuleInterop"</span>: <span class="kw">true</span>,
+        <span class="str">"outDir"</span>: <span class="str">"./dist"</span>,          <span class="cm">// Compiled JS output folder</span>
+        <span class="str">"rootDir"</span>: <span class="str">"./src"</span>,         <span class="cm">// TS source folder</span>
+        <span class="str">"sourceMap"</span>: <span class="kw">true</span>,          <span class="cm">// Debug TS directly in browser/IDE</span>
+        <span class="str">"forceConsistentCasingInFileNames"</span>: <span class="kw">true</span>
+    },
+    <span class="str">"include"</span>: [<span class="str">"src/**/*.ts"</span>],
+    <span class="str">"exclude"</span>: [<span class="str">"node_modules"</span>, <span class="str">"dist"</span>]
+}</code></pre>
+                </div>
+                <div class="callout warning">
+                    <strong>⚠️ Important:</strong> Always enable <code>"strict": true</code>. It enables <code>strictNullChecks</code>,
+                    <code>noImplicitAny</code>, and other safeguards that prevent entire classes of bugs.
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Basic Types ─── -->
+        <div class="section fade-in" id="types">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-purple">🔢</span>
+                <h2>3. Basic Types &amp; Type Annotations</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    TypeScript's type system is <strong>structural</strong> (unlike Java's nominal typing).
+                    Types are annotated using <code>: type</code> syntax. TypeScript can also <strong>infer</strong>
+                    types automatically, so you don't always need explicit annotations.
+                </p>
+
+                <h3>All Primitive Types</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>TypeScript — Basic Types</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// ── Primitives ──</span>
+<span class="kw">let</span> <span class="var">isPassed</span>: <span class="tp">boolean</span> = <span class="kw">true</span>;           <span class="cm">// Java: boolean</span>
+<span class="kw">let</span> <span class="var">retryCount</span>: <span class="tp">number</span> = <span class="num">3</span>;             <span class="cm">// Java: int / double (TS unifies them)</span>
+<span class="kw">let</span> <span class="var">testName</span>: <span class="tp">string</span> = <span class="str">'Login Flow'</span>;    <span class="cm">// Java: String</span>
+<span class="kw">let</span> <span class="var">bigId</span>: <span class="tp">bigint</span> = <span class="num">9007199254740991n</span>; <span class="cm">// Java: long</span>
+<span class="kw">let</span> <span class="var">uniqueKey</span>: <span class="tp">symbol</span> = <span class="fn">Symbol</span>(<span class="str">'id'</span>);  <span class="cm">// Java: (no direct equivalent)</span>
+
+<span class="cm">// ── Special Types ──</span>
+<span class="kw">let</span> <span class="var">notSure</span>: <span class="tp">unknown</span> = <span class="num">4</span>;             <span class="cm">// Safer than 'any' — requires type checking</span>
+<span class="kw">let</span> <span class="var">anything</span>: <span class="tp">any</span> = <span class="str">'could be anything'</span>; <span class="cm">// Opts out of type checking (avoid!)</span>
+<span class="kw">let</span> <span class="var">noValue</span>: <span class="tp">void</span> = <span class="kw">undefined</span>;       <span class="cm">// Java: void (for function returns)</span>
+<span class="kw">let</span> <span class="var">notFound</span>: <span class="tp">null</span> = <span class="kw">null</span>;
+<span class="kw">let</span> <span class="var">notSet</span>: <span class="tp">undefined</span> = <span class="kw">undefined</span>;
+<span class="kw">let</span> <span class="var">crash</span>: <span class="tp">never</span>;                    <span class="cm">// Function that never returns (throws error)</span>
+
+<span class="cm">// ── Arrays ──</span>
+<span class="kw">let</span> <span class="var">testTags</span>: <span class="tp">string[]</span> = [<span class="str">'smoke'</span>, <span class="str">'regression'</span>];     <span class="cm">// Java: List&lt;String&gt;</span>
+<span class="kw">let</span> <span class="var">scores</span>: <span class="tp">Array</span>&lt;<span class="tp">number</span>&gt; = [<span class="num">95</span>, <span class="num">87</span>, <span class="num">91</span>];       <span class="cm">// Generic syntax</span>
+
+<span class="cm">// ── Tuple (fixed-length array) ──</span>
+<span class="kw">let</span> <span class="var">testResult</span>: [<span class="tp">string</span>, <span class="tp">boolean</span>, <span class="tp">number</span>] = [<span class="str">'Login'</span>, <span class="kw">true</span>, <span class="num">2.5</span>];
+
+<span class="cm">// ── Object literal type ──</span>
+<span class="kw">let</span> <span class="var">config</span>: { <span class="var">baseUrl</span>: <span class="tp">string</span>; <span class="var">timeout</span>: <span class="tp">number</span> } = {
+    <span class="var">baseUrl</span>: <span class="str">'https://api.example.com'</span>,
+    <span class="var">timeout</span>: <span class="num">30000</span>
+};</code></pre>
+                </div>
+
+                <h3>Type Inference</h3>
+                <p>TypeScript <em>infers</em> types when you initialize a variable. You don't need to annotate everything.</p>
+                <div class="code-block">
+                    <div class="code-header"><span>Type Inference Example</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">let</span> <span class="var">username</span> = <span class="str">'testuser'</span>;   <span class="cm">// TS infers: string</span>
+<span class="cm">// username = 42;          // ❌ Error: Type 'number' is not assignable to 'string'</span>
+
+<span class="kw">let</span> <span class="var">response</span>;               <span class="cm">// TS infers: any (no initialization = no inference)</span>
+<span class="var">response</span> = <span class="num">200</span>;             <span class="cm">// ✅ allowed because it's 'any'</span></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Interfaces ─── -->
+        <div class="section fade-in" id="interfaces">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-cyan">📋</span>
+                <h2>4. Interfaces — Contracts for Your Test Data</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    An <strong>interface</strong> defines a <em>contract</em> — the shape an object must have.
+                    Unlike Java, TypeScript interfaces are purely structural (any object with matching properties satisfies the interface).
+                    Interfaces can extend other interfaces, have optional properties, readonly properties, and even describe function signatures.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header"><span>Interfaces for API Testing</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// ── Define an interface for API response ──</span>
+<span class="kw">interface</span> <span class="tp">User</span> {
+    <span class="kw">readonly</span> <span class="var">id</span>: <span class="tp">number</span>;            <span class="cm">// Cannot be modified after creation</span>
+    <span class="var">name</span>: <span class="tp">string</span>;
+    <span class="var">email</span>: <span class="tp">string</span>;
+    <span class="var">role</span>?: <span class="tp">string</span>;               <span class="cm">// Optional property</span>
+}
+
+<span class="cm">// ── Extending interfaces ──</span>
+<span class="kw">interface</span> <span class="tp">AdminUser</span> <span class="kw">extends</span> <span class="tp">User</span> {
+    <span class="var">permissions</span>: <span class="tp">string[]</span>;
+    <span class="var">accessLevel</span>: <span class="tp">number</span>;
+}
+
+<span class="cm">// ── Interface for a function signature ──</span>
+<span class="kw">interface</span> <span class="tp">ApiValidator</span> {
+    (<span class="var">response</span>: <span class="tp">Response</span>): <span class="tp">boolean</span>;    <span class="cm">// Callable signature</span>
+}
+
+<span class="cm">// ── Usage in a test ──</span>
+<span class="kw">const</span> <span class="var">user</span>: <span class="tp">User</span> = {
+    <span class="var">id</span>: <span class="num">101</span>,
+    <span class="var">name</span>: <span class="str">'John Doe'</span>,
+    <span class="var">email</span>: <span class="str">'john@test.com'</span>
+    <span class="cm">// role is optional, so it's fine to omit</span>
+};
+
+<span class="cm">// user.id = 202;  // ❌ Error: Cannot assign to 'id' because it's readonly</span></code></pre>
+                </div>
+
+                <div class="callout tip">
+                    <strong>💡 SDET Tip:</strong> Use interfaces to model your API request/response payloads.
+                    This gives you autocomplete when writing test assertions and catches mismatched fields at compile time.
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Classes ─── -->
+        <div class="section fade-in" id="classes">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-blue">🏗️</span>
+                <h2>5. Classes &amp; Access Modifiers — OOP for Test Frameworks</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    TypeScript classes are very similar to Java classes but with some syntactic sugar.
+                    You get <code>public</code>, <code>private</code>, <code>protected</code> modifiers,
+                    <code>readonly</code> properties, <code>abstract</code> classes, and
+                    <strong>parameter property shorthand</strong> (defining &amp; assigning in the constructor in one line).
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header"><span>Page Object Model with TypeScript</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">abstract class</span> <span class="tp">BasePage</span> {
+    <span class="kw">protected</span> <span class="kw">readonly</span> <span class="var">url</span>: <span class="tp">string</span>;
+
+    <span class="kw">constructor</span>(<span class="kw">protected</span> <span class="var">page</span>: <span class="tp">Page</span>, url: <span class="tp">string</span>) {
+        <span class="pc">this</span>.url = url;
+    }
+
+    <span class="kw">async</span> <span class="fn">navigate</span>(): <span class="tp">Promise</span>&lt;<span class="kw">void</span>&gt; {
+        <span class="kw">await</span> <span class="pc">this</span>.page.goto(<span class="pc">this</span>.url);
+    }
+
+    <span class="kw">abstract</span> <span class="fn">isLoaded</span>(): <span class="tp">Promise</span>&lt;<span class="tp">boolean</span>&gt;;  <span class="cm">// Must be implemented by subclasses!</span>
+}
+
+<span class="kw">class</span> <span class="tp">LoginPage</span> <span class="kw">extends</span> <span class="tp">BasePage</span> {
+    <span class="cm">// Parameter property shorthand: 'private' auto-assigns</span>
+    <span class="kw">constructor</span>(
+        page: <span class="tp">Page</span>,
+        <span class="kw">private</span> <span class="var">usernameSelector</span> = <span class="str">'#username'</span>,
+        <span class="kw">private</span> <span class="var">passwordSelector</span> = <span class="str">'#password'</span>
+    ) {
+        <span class="kw">super</span>(page, <span class="str">'https://example.com/login'</span>);
+    }
+
+    <span class="kw">async</span> <span class="fn">isLoaded</span>(): <span class="tp">Promise</span>&lt;<span class="tp">boolean</span>&gt; {
+        <span class="kw">return</span> <span class="kw">await</span> <span class="pc">this</span>.page.isVisible(<span class="pc">this</span>.usernameSelector);
+    }
+
+    <span class="kw">async</span> <span class="fn">login</span>(<span class="var">user</span>: <span class="tp">string</span>, <span class="var">pass</span>: <span class="tp">string</span>): <span class="tp">Promise</span>&lt;<span class="kw">void</span>&gt; {
+        <span class="kw">await</span> <span class="pc">this</span>.page.fill(<span class="pc">this</span>.usernameSelector, user);
+        <span class="kw">await</span> <span class="pc">this</span>.page.fill(<span class="pc">this</span>.passwordSelector, pass);
+        <span class="kw">await</span> <span class="pc">this</span>.page.click(<span class="str">'button[type="submit"]'</span>);
+    }
+}</code></pre>
+                </div>
+                <p>Compare this to a typical Selenium POM in Java — it's cleaner, more concise, and the <code>async/await</code> pattern eliminates callback hell.</p>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Functions ─── -->
+        <div class="section fade-in" id="functions">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-orange">⚡</span>
+                <h2>6. Functions — Typed Signatures, Overloads &amp; Async</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    TypeScript allows you to type <strong>parameters</strong> and <strong>return values</strong>.
+                    You can also define <strong>optional parameters</strong> (<code>?</code>), <strong>default values</strong>,
+                    <strong>rest parameters</strong> (<code>...args</code>), and <strong>function overloads</strong>.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header"><span>Function Types &amp; Overloads</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// ── Basic typed function ──</span>
+<span class="kw">function</span> <span class="fn">assertStatus</span>(<span class="var">actual</span>: <span class="tp">number</span>, <span class="var">expected</span>: <span class="tp">number</span>): <span class="tp">boolean</span> {
+    <span class="kw">return</span> actual === expected;
+}
+
+<span class="cm">// ── Optional &amp; default parameters ──</span>
+<span class="kw">function</span> <span class="fn">retry</span>(<span class="var">fn</span>: () =&gt; <span class="tp">Promise</span>&lt;<span class="kw">void</span>&gt;, <span class="var">maxAttempts</span>: <span class="tp">number</span> = <span class="num">3</span>, <span class="var">delayMs</span>?: <span class="tp">number</span>): <span class="tp">Promise</span>&lt;<span class="kw">void</span>&gt; {
+    <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; maxAttempts; i++) {
+        <span class="kw">try</span> { <span class="kw">await</span> <span class="fn">fn</span>(); <span class="kw">return</span>; } <span class="kw">catch</span> {}
+        <span class="kw">if</span> (delayMs) <span class="kw">await</span> <span class="kw">new</span> <span class="tp">Promise</span>(r =&gt; <span class="fn">setTimeout</span>(r, delayMs));
+    }
+    <span class="kw">throw</span> <span class="kw">new</span> <span class="tp">Error</span>(<span class="str">`Failed after </span><span class="op">${</span>maxAttempts<span class="op">}</span><span class="str"> attempts`</span>);
+}
+
+<span class="cm">// ── Rest parameters (varargs) ──</span>
+<span class="kw">function</span> <span class="fn">logResults</span>(<span class="var">suiteName</span>: <span class="tp">string</span>, ...<span class="var">results</span>: <span class="tp">boolean[]</span>): <span class="kw">void</span> {
+    <span class="kw">const</span> passed = results.filter(<span class="var">r</span> =&gt; r).length;
+    console.log(<span class="str">`</span><span class="op">${</span>suiteName<span class="op">}</span><span class="str">: </span><span class="op">${</span>passed<span class="op">}</span><span class="str">/</span><span class="op">${</span>results.length<span class="op">}</span><span class="str"> passed`</span>);
+}
+<span class="fn">logResults</span>(<span class="str">'Smoke'</span>, <span class="kw">true</span>, <span class="kw">true</span>, <span class="kw">false</span>, <span class="kw">true</span>); <span class="cm">// "Smoke: 3/4 passed"</span>
+
+<span class="cm">// ── Arrow functions with types ──</span>
+<span class="kw">const</span> <span class="fn">multiply</span> = (<span class="var">a</span>: <span class="tp">number</span>, <span class="var">b</span>: <span class="tp">number</span>): <span class="tp">number</span> =&gt; a * b;
+
+<span class="cm">// ── Function overloads ──</span>
+<span class="kw">function</span> <span class="fn">parseResponse</span>(<span class="var">body</span>: <span class="tp">string</span>): <span class="tp">object</span>;
+<span class="kw">function</span> <span class="fn">parseResponse</span>(<span class="var">body</span>: <span class="tp">Buffer</span>): <span class="tp">object</span>;
+<span class="kw">function</span> <span class="fn">parseResponse</span>(<span class="var">body</span>: <span class="tp">string</span> | <span class="tp">Buffer</span>): <span class="tp">object</span> {
+    <span class="kw">const</span> raw = <span class="kw">typeof</span> body === <span class="str">'string'</span> ? body : body.toString();
+    <span class="kw">return</span> <span class="tp">JSON</span>.parse(raw);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Generics ─── -->
+        <div class="section fade-in" id="generics">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-purple">🧬</span>
+                <h2>7. Generics — Reusable, Type-Safe Code</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    Generics in TypeScript work similarly to Java generics (<code>List&lt;T&gt;</code>, <code>Map&lt;K,V&gt;</code>).
+                    They allow you to write <strong>type-safe reusable components</strong> without sacrificing type information.
+                    You can constrain generics with <code>extends</code>.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header"><span>Generics in Test Utilities</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// ── Generic API response wrapper ──</span>
+<span class="kw">interface</span> <span class="tp">ApiResponse</span>&lt;<span class="tp">T</span>&gt; {
+    <span class="var">status</span>: <span class="tp">number</span>;
+    <span class="var">data</span>: <span class="tp">T</span>;
+    <span class="var">message</span>: <span class="tp">string</span>;
+}
+
+<span class="cm">// ── Generic function to fetch and parse ──</span>
+<span class="kw">async</span> <span class="kw">function</span> <span class="fn">fetchData</span>&lt;<span class="tp">T</span>&gt;(<span class="var">url</span>: <span class="tp">string</span>): <span class="tp">Promise</span>&lt;<span class="tp">ApiResponse</span>&lt;<span class="tp">T</span>&gt;&gt; {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(url);
+    <span class="kw">return</span> <span class="kw">await</span> res.json() <span class="kw">as</span> <span class="tp">ApiResponse</span>&lt;<span class="tp">T</span>&gt;;
+}
+
+<span class="cm">// ── Usage with specific types ──</span>
+<span class="kw">interface</span> <span class="tp">User</span> { <span class="var">id</span>: <span class="tp">number</span>; <span class="var">name</span>: <span class="tp">string</span>; }
+<span class="kw">const</span> <span class="var">userResp</span> = <span class="kw">await</span> <span class="fn">fetchData</span>&lt;<span class="tp">User</span>&gt;(<span class="str">'/api/users/1'</span>);
+<span class="cm">// userResp.data is now typed as User — full autocomplete! ✅</span>
+
+<span class="cm">// ── Generic constraint ──</span>
+<span class="kw">function</span> <span class="fn">getProperty</span>&lt;<span class="tp">T</span>, <span class="tp">K</span> <span class="kw">extends</span> <span class="kw">keyof</span> <span class="tp">T</span>&gt;(<span class="var">obj</span>: <span class="tp">T</span>, <span class="var">key</span>: <span class="tp">K</span>): <span class="tp">T</span>[<span class="tp">K</span>] {
+    <span class="kw">return</span> obj[key];
+}
+<span class="fn">getProperty</span>(userResp.data, <span class="str">'name'</span>); <span class="cm">// ✅ OK</span>
+<span class="cm">// getProperty(userResp.data, 'nonexistent'); // ❌ Compile error!</span></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Enums ─── -->
+        <div class="section fade-in" id="enums">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-green">🔖</span>
+                <h2>8. Enums — Named Constants for Readable Tests</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    TypeScript supports both <strong>numeric</strong> and <strong>string enums</strong>.
+                    String enums are preferred for test automation because they serialize to readable values
+                    (great for reporting &amp; logging). You can also use <code>const enum</code> for zero-overhead
+                    compile-time inlining (like Java's <code>enum</code> but without the runtime cost).
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header"><span>Enums for Test Status &amp; Browser Types</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// ── String enum (preferred for tests) ──</span>
+<span class="kw">enum</span> <span class="tp">TestStatus</span> {
+    <span class="var">PASSED</span> = <span class="str">'PASSED'</span>,
+    <span class="var">FAILED</span> = <span class="str">'FAILED'</span>,
+    <span class="var">SKIPPED</span> = <span class="str">'SKIPPED'</span>,
+    <span class="var">FLAKY</span> = <span class="str">'FLAKY'</span>
+}
+
+<span class="kw">function</span> <span class="fn">reportResult</span>(<span class="var">test</span>: <span class="tp">string</span>, <span class="var">status</span>: <span class="tp">TestStatus</span>): <span class="kw">void</span> {
+    console.log(<span class="str">`[</span><span class="op">${</span>status<span class="op">}</span><span class="str">] </span><span class="op">${</span>test<span class="op">}</span><span class="str">`</span>);
+}
+<span class="fn">reportResult</span>(<span class="str">'Login Flow'</span>, <span class="tp">TestStatus</span>.<span class="var">PASSED</span>);
+<span class="cm">// Output: [PASSED] Login Flow</span>
+
+<span class="cm">// ── Numeric enum ──</span>
+<span class="kw">enum</span> <span class="tp">HttpStatus</span> {
+    <span class="var">OK</span> = <span class="num">200</span>,
+    <span class="var">CREATED</span> = <span class="num">201</span>,
+    <span class="var">NOT_FOUND</span> = <span class="num">404</span>,
+    <span class="var">SERVER_ERROR</span> = <span class="num">500</span>
+}
+
+<span class="cm">// ── Const enum (zero runtime cost — inlined at compile time) ──</span>
+<span class="kw">const</span> <span class="kw">enum</span> <span class="tp">Browser</span> {
+    <span class="var">CHROMIUM</span> = <span class="str">'chromium'</span>,
+    <span class="var">FIREFOX</span> = <span class="str">'firefox'</span>,
+    <span class="var">WEBKIT</span> = <span class="str">'webkit'</span>
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Advanced Types ─── -->
+        <div class="section fade-in" id="advanced">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-pink">🔥</span>
+                <h2>9. Advanced Types — Union, Intersection, Type Guards &amp; Utility Types</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory</h3>
+                <p>
+                    TypeScript offers powerful type operators that have no direct Java equivalent.
+                    These are essential for writing flexible yet type-safe test code.
+                </p>
+
+                <h3>Union Types (<code>|</code>) — "Either this OR that"</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>Union Types</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// A variable that can hold multiple types</span>
+<span class="kw">type</span> <span class="tp">LocatorStrategy</span> = <span class="tp">string</span> | <span class="tp">RegExp</span> | (<span class="kw">()</span> =&gt; <span class="tp">string</span>);
+
+<span class="kw">function</span> <span class="fn">findElement</span>(<span class="var">strategy</span>: <span class="tp">LocatorStrategy</span>): <span class="kw">void</span> {
+    <span class="kw">if</span> (<span class="kw">typeof</span> strategy === <span class="str">'string'</span>) {
+        console.log(<span class="str">'Using CSS selector:'</span>, strategy);
+    } <span class="kw">else</span> <span class="kw">if</span> (strategy <span class="kw">instanceof</span> <span class="tp">RegExp</span>) {
+        console.log(<span class="str">'Using regex pattern:'</span>, strategy);
+    } <span class="kw">else</span> {
+        console.log(<span class="str">'Using dynamic function'</span>);
+    }
+}</code></pre>
+                </div>
+
+                <h3>Intersection Types (<code>&amp;</code>) — "Combine multiple types"</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>Intersection Types</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">interface</span> <span class="tp">Timestamped</span> { <span class="var">createdAt</span>: <span class="tp">Date</span>; <span class="var">updatedAt</span>: <span class="tp">Date</span>; }
+<span class="kw">interface</span> <span class="tp">SoftDeletable</span> { <span class="var">isDeleted</span>: <span class="tp">boolean</span>; }
+
+<span class="cm">// Combine both into one type</span>
+<span class="kw">type</span> <span class="tp">Entity</span> = <span class="tp">Timestamped</span> &amp; <span class="tp">SoftDeletable</span>;
+
+<span class="kw">const</span> <span class="var">testRecord</span>: <span class="tp">Entity</span> = {
+    <span class="var">createdAt</span>: <span class="kw">new</span> <span class="tp">Date</span>(),
+    <span class="var">updatedAt</span>: <span class="kw">new</span> <span class="tp">Date</span>(),
+    <span class="var">isDeleted</span>: <span class="kw">false</span>
+};</code></pre>
+                </div>
+
+                <h3>Utility Types (Built-in)</h3>
+                <div class="comparison-table-wrap">
+                    <table class="comparison">
+                        <thead>
+                            <tr><th>Utility Type</th><th>Description</th><th>Java Analogy</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>Partial&lt;T&gt;</code></td><td>All properties optional</td><td>Builder pattern</td></tr>
+                            <tr><td><code>Required&lt;T&gt;</code></td><td>All properties required</td><td>@NotNull on all fields</td></tr>
+                            <tr><td><code>Readonly&lt;T&gt;</code></td><td>All properties readonly</td><td>Immutable objects</td></tr>
+                            <tr><td><code>Pick&lt;T, K&gt;</code></td><td>Select specific keys</td><td>DTO projection</td></tr>
+                            <tr><td><code>Omit&lt;T, K&gt;</code></td><td>Exclude specific keys</td><td>—</td></tr>
+                            <tr><td><code>Record&lt;K, V&gt;</code></td><td>Map of keys to a value type</td><td><code>Map&lt;K,V&gt;</code></td></tr>
+                            <tr><td><code>ReturnType&lt;F&gt;</code></td><td>Extract return type of function</td><td>Reflection</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><span>Utility Types in Action</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">interface</span> <span class="tp">TestConfig</span> {
+    <span class="var">baseUrl</span>: <span class="tp">string</span>;
+    <span class="var">timeout</span>: <span class="tp">number</span>;
+    <span class="var">retries</span>: <span class="tp">number</span>;
+}
+
+<span class="cm">// For a config override, all fields are optional</span>
+<span class="kw">type</span> <span class="tp">ConfigOverride</span> = <span class="tp">Partial</span>&lt;<span class="tp">TestConfig</span>&gt;;
+
+<span class="kw">const</span> <span class="var">override</span>: <span class="tp">ConfigOverride</span> = { <span class="var">timeout</span>: <span class="num">60000</span> }; <span class="cm">// ✅ Only timeout specified</span>
+
+<span class="cm">// Pick only what you need for a report</span>
+<span class="kw">type</span> <span class="tp">ConfigSummary</span> = <span class="tp">Pick</span>&lt;<span class="tp">TestConfig</span>, <span class="str">'baseUrl'</span> | <span class="str">'timeout'</span>&gt;;</code></pre>
+                </div>
+
+                <h3>Type Guards — Narrowing at Runtime</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>Type Guards</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">interface</span> <span class="tp">ApiError</span> { <span class="var">status</span>: <span class="tp">number</span>; <span class="var">message</span>: <span class="tp">string</span>; }
+<span class="kw">interface</span> <span class="tp">ApiSuccess</span>&lt;<span class="tp">T</span>&gt; { <span class="var">status</span>: <span class="tp">number</span>; <span class="var">data</span>: <span class="tp">T</span>; }
+
+<span class="kw">type</span> <span class="tp">ApiResult</span>&lt;<span class="tp">T</span>&gt; = <span class="tp">ApiSuccess</span>&lt;<span class="tp">T</span>&gt; | <span class="tp">ApiError</span>;
+
+<span class="cm">// Custom type guard</span>
+<span class="kw">function</span> <span class="fn">isApiError</span>&lt;<span class="tp">T</span>&gt;(<span class="var">result</span>: <span class="tp">ApiResult</span>&lt;<span class="tp">T</span>&gt;): <span class="var">result</span> <span class="kw">is</span> <span class="tp">ApiError</span> {
+    <span class="kw">return</span> <span class="str">'message'</span> <span class="kw">in</span> result &amp;&amp; !(<span class="str">'data'</span> <span class="kw">in</span> result);
+}
+
+<span class="kw">function</span> <span class="fn">handleResult</span>&lt;<span class="tp">T</span>&gt;(<span class="var">result</span>: <span class="tp">ApiResult</span>&lt;<span class="tp">T</span>&gt;): <span class="kw">void</span> {
+    <span class="kw">if</span> (<span class="fn">isApiError</span>(result)) {
+        console.error(<span class="str">`Error: </span><span class="op">${</span>result.message<span class="op">}</span><span class="str">`</span>); <span class="cm">// TS knows it's ApiError</span>
+    } <span class="kw">else</span> {
+        console.log(<span class="str">'Data:'</span>, result.data); <span class="cm">// TS knows it's ApiSuccess</span>
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: TS vs JS Comparison ─── -->
+        <div class="section fade-in" id="comparison">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-orange">⚖️</span>
+                <h2>10. TypeScript vs JavaScript — Complete Comparison</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory: Key Differences at a Glance</h3>
+                <p>
+                    JavaScript is <strong>dynamically typed</strong> — types are checked at runtime.
+                    TypeScript is <strong>statically typed</strong> — types are checked at compile time.
+                    This single difference impacts every aspect of development and testing.
+                </p>
+
+                <div class="comparison-table-wrap">
+                    <table class="comparison">
+                        <thead>
+                            <tr><th>Feature</th><th>JavaScript <span class="tag tag-js">JS</span></th><th>TypeScript <span class="tag tag-ts">TS</span></th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Type System</td>
+                                <td>Dynamic (runtime)</td>
+                                <td><span class="check">Static (compile-time)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Type Annotations</td>
+                                <td><span class="cross">❌ Not available</span></td>
+                                <td><span class="check">✅ Full support</span></td>
+                            </tr>
+                            <tr>
+                                <td>Interfaces</td>
+                                <td><span class="cross">❌ No</span></td>
+                                <td><span class="check">✅ Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td>Generics</td>
+                                <td><span class="cross">❌ No</span></td>
+                                <td><span class="check">✅ Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td>Enums</td>
+                                <td><span class="cross">❌ No (use constants)</span></td>
+                                <td><span class="check">✅ Numeric + String enums</span></td>
+                            </tr>
+                            <tr>
+                                <td>Access Modifiers</td>
+                                <td><span class="cross">❌ #private only (ES2022)</span></td>
+                                <td><span class="check">✅ public/private/protected</span></td>
+                            </tr>
+                            <tr>
+                                <td>Abstract Classes</td>
+                                <td><span class="cross">❌ No</span></td>
+                                <td><span class="check">✅ Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td>Function Overloads</td>
+                                <td><span class="cross">❌ No</span></td>
+                                <td><span class="check">✅ Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td>Compilation Step</td>
+                                <td><span class="check">None (runs directly)</span></td>
+                                <td><span class="cross">Requires tsc compilation</span></td>
+                            </tr>
+                            <tr>
+                                <td>IDE Autocomplete</td>
+                                <td>Limited</td>
+                                <td><span class="check">Excellent (IntelliSense)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Refactoring Safety</td>
+                                <td>Risky (runtime errors)</td>
+                                <td><span class="check">Safe (compile-time errors)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Null Safety</td>
+                                <td><span class="cross">No built-in checks</span></td>
+                                <td><span class="check">strictNullChecks</span></td>
+                            </tr>
+                            <tr>
+                                <td>Learning Curve</td>
+                                <td>Lower</td>
+                                <td>Slightly higher (worth it!)</td>
+                            </tr>
+                            <tr>
+                                <td>Runtime Performance</td>
+                                <td>Same</td>
+                                <td>Same (compiles to JS)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout warning">
+                    <strong>⚠️ Key Insight:</strong> TypeScript's type checking happens <em>only at compile time</em>.
+                    At runtime, it's just JavaScript. This means you still need proper error handling and validation
+                    in your test code — types won't catch API schema changes at runtime!
+                </div>
+
+                <h3>Side-by-Side Code Comparison</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>JavaScript — No type safety</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// JS: No types — easy to make mistakes</span>
+<span class="kw">function</span> <span class="fn">calculateCoverage</span>(<span class="var">passed</span>, <span class="var">total</span>) {
+    <span class="kw">return</span> (passed / total) * <span class="num">100</span>;
+}
+<span class="fn">calculateCoverage</span>(<span class="str">'90'</span>, <span class="num">100</span>);   <span class="cm">// 😱 '9010' — string concatenation!</span>
+<span class="fn">calculateCoverage</span>(<span class="num">90</span>);            <span class="cm">// 😱 NaN — missing parameter, no error!</span></code></pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-header"><span>TypeScript — Compile-time safety</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="cm">// TS: Types catch errors before execution</span>
+<span class="kw">function</span> <span class="fn">calculateCoverage</span>(<span class="var">passed</span>: <span class="tp">number</span>, <span class="var">total</span>: <span class="tp">number</span>): <span class="tp">number</span> {
+    <span class="kw">return</span> (passed / total) * <span class="num">100</span>;
+}
+<span class="cm">// calculateCoverage('90', 100);  // ❌ Compile error: string not assignable to number</span>
+<span class="cm">// calculateCoverage(90);          // ❌ Compile error: expected 2 arguments</span>
+<span class="fn">calculateCoverage</span>(<span class="num">90</span>, <span class="num">100</span>);    <span class="cm">// ✅ 90 — correct!</span></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── SECTION: Playwright + TypeScript ─── -->
+        <div class="section fade-in" id="playwright">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="icon icon-green">🎭</span>
+                <h2>11. SDET Practical: Playwright with TypeScript (Real-World Examples)</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-body">
+                <h3>📖 Theory: Why Playwright + TypeScript?</h3>
+                <p>
+                    Playwright was <strong>built for TypeScript</strong>. Its API is fully typed, meaning
+                    you get autocomplete for all locators, assertions, and browser actions. Combined with
+                    TypeScript's type safety, your test suite becomes significantly more robust.
+                </p>
+
+                <h3>Complete E2E Test Example</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>Playwright Test — Login + API validation</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">import</span> { test, expect, <span class="tp">Page</span>, <span class="tp">APIResponse</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+<span class="cm">// ── Interfaces for type safety ──</span>
+<span class="kw">interface</span> <span class="tp">LoginPayload</span> {
+    <span class="var">username</span>: <span class="tp">string</span>;
+    <span class="var">password</span>: <span class="tp">string</span>;
+}
+
+<span class="kw">interface</span> <span class="tp">LoginResponse</span> {
+    <span class="var">token</span>: <span class="tp">string</span>;
+    <span class="var">user</span>: { <span class="var">id</span>: <span class="tp">number</span>; <span class="var">name</span>: <span class="tp">string</span>; <span class="var">role</span>: <span class="tp">string</span> };
+}
+
+<span class="cm">// ── Page Object with full typing ──</span>
+<span class="kw">class</span> <span class="tp">LoginPage</span> {
+    <span class="kw">readonly</span> <span class="var">usernameInput</span> = <span class="pc">this</span>.page.locator(<span class="str">'[data-testid="username"]'</span>);
+    <span class="kw">readonly</span> <span class="var">passwordInput</span> = <span class="pc">this</span>.page.locator(<span class="str">'[data-testid="password"]'</span>);
+    <span class="kw">readonly</span> <span class="var">submitBtn</span> = <span class="pc">this</span>.page.locator(<span class="str">'button[type="submit"]'</span>);
+    <span class="kw">readonly</span> <span class="var">errorMsg</span> = <span class="pc">this</span>.page.locator(<span class="str">'.error-message'</span>);
+
+    <span class="kw">constructor</span>(<span class="kw">private</span> <span class="kw">readonly</span> <span class="var">page</span>: <span class="tp">Page</span>) {}
+
+    <span class="kw">async</span> <span class="fn">goto</span>(): <span class="tp">Promise</span>&lt;<span class="kw">void</span>&gt; {
+        <span class="kw">await</span> <span class="pc">this</span>.page.goto(<span class="str">'/login'</span>);
+    }
+
+    <span class="kw">async</span> <span class="fn">login</span>(<span class="var">payload</span>: <span class="tp">LoginPayload</span>): <span class="tp">Promise</span>&lt;<span class="kw">void</span>&gt; {
+        <span class="kw">await</span> <span class="pc">this</span>.usernameInput.fill(payload.username);
+        <span class="kw">await</span> <span class="pc">this</span>.passwordInput.fill(payload.password);
+        <span class="kw">await</span> <span class="pc">this</span>.submitBtn.click();
+    }
+}
+
+<span class="cm">// ── API helper (like Rest Assured but typed!) ──</span>
+<span class="kw">async</span> <span class="kw">function</span> <span class="fn">apiLogin</span>(<span class="var">request</span>: <span class="tp">APIRequestContext</span>, <span class="var">payload</span>: <span class="tp">LoginPayload</span>): <span class="tp">Promise</span>&lt;<span class="tp">LoginResponse</span>&gt; {
+    <span class="kw">const</span> response = <span class="kw">await</span> request.post(<span class="str">'/api/auth/login'</span>, { <span class="var">data</span>: payload });
+    <span class="kw">return</span> <span class="kw">await</span> response.json() <span class="kw">as</span> <span class="tp">LoginResponse</span>;
+}
+
+<span class="cm">// ── The actual test ──</span>
+test.describe(<span class="str">'Authentication'</span>, () =&gt; {
+    test(<span class="str">'should login successfully with valid credentials'</span>, <span class="kw">async</span> ({ page, request }) =&gt; {
+        <span class="kw">const</span> loginPage = <span class="kw">new</span> <span class="tp">LoginPage</span>(page);
+
+        <span class="kw">await</span> loginPage.goto();
+        <span class="kw">await</span> loginPage.login({
+            <span class="var">username</span>: <span class="str">'testuser@example.com'</span>,
+            <span class="var">password</span>: <span class="str">'SecurePass123!'</span>
+        });
+
+        <span class="cm">// Assert UI</span>
+        <span class="kw">await</span> expect(page).toHaveURL(<span class="str">/dashboard/</span>);
+        <span class="kw">await</span> expect(page.locator(<span class="str">'.welcome-banner'</span>)).toBeVisible();
+
+        <span class="cm">// Validate via API (like Rest Assured!)</span>
+        <span class="kw">const</span> apiResponse = <span class="kw">await</span> <span class="fn">apiLogin</span>(request, {
+            <span class="var">username</span>: <span class="str">'testuser@example.com'</span>,
+            <span class="var">password</span>: <span class="str">'SecurePass123!'</span>
+        });
+        expect(apiResponse.token).toBeDefined();
+        expect(apiResponse.user.role).toBe(<span class="str">'admin'</span>);
+    });
+
+    test(<span class="str">'should show error for invalid password'</span>, <span class="kw">async</span> ({ page }) =&gt; {
+        <span class="kw">const</span> loginPage = <span class="kw">new</span> <span class="tp">LoginPage</span>(page);
+        <span class="kw">await</span> loginPage.goto();
+        <span class="kw">await</span> loginPage.login({
+            <span class="var">username</span>: <span class="str">'testuser@example.com'</span>,
+            <span class="var">password</span>: <span class="str">'WrongPass'</span>
+        });
+        <span class="kw">await</span> expect(loginPage.errorMsg).toContainText(<span class="str">'Invalid credentials'</span>);
+    });
+});</code></pre>
+                </div>
+
+                <h3>API Testing with TypeScript (Rest Assured Replacement)</h3>
+                <div class="code-block">
+                    <div class="code-header"><span>API Test — Typed Request &amp; Response</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div>
+                    <pre><code><span class="kw">import</span> { test, expect } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+<span class="kw">interface</span> <span class="tp">CreateUserRequest</span> {
+    <span class="var">name</span>: <span class="tp">string</span>;
+    <span class="var">email</span>: <span class="tp">string</span>;
+    <span class="var">role</span>: <span class="str">'admin'</span> | <span class="str">'user'</span> | <span class="str">'viewer'</span>;  <span class="cm">// Union type = limited choices</span>
+}
+
+<span class="kw">interface</span> <span class="tp">CreateUserResponse</span> {
+    <span class="var">id</span>: <span class="tp">number</span>;
+    <span class="var">name</span>: <span class="tp">string</span>;
+    <span class="var">email</span>: <span class="tp">string</span>;
+    <span class="var">role</span>: <span class="tp">string</span>;
+    <span class="var">createdAt</span>: <span class="tp">string</span>;
+}
+
+test(<span class="str">'POST /api/users — should create a new user'</span>, <span class="kw">async</span> ({ request }) =&gt; {
+    <span class="kw">const</span> payload: <span class="tp">CreateUserRequest</span> = {
+        <span class="var">name</span>: <span class="str">'Jane Smith'</span>,
+        <span class="var">email</span>: <span class="str">'jane@example.com'</span>,
+        <span class="var">role</span>: <span class="str">'admin'</span>
+        <span class="cm">// role: 'superadmin'   // ❌ Compile error! Not in the union.</span>
+    };
+
+    <span class="kw">const</span> response = <span class="kw">await</span> request.post(<span class="str">'/api/users'</span>, { <span class="var">data</span>: payload });
+    expect(response.status()).toBe(<span class="num">201</span>);
+
+    <span class="kw">const</span> body: <span class="tp">CreateUserResponse</span> = <span class="kw">await</span> response.json();
+    expect(body.name).toBe(<span class="str">'Jane Smith'</span>);
+    expect(body.role).toBe(<span class="str">'admin'</span>);
+    expect(body.id).toBeGreaterThan(<span class="num">0</span>);
+    expect(body.createdAt).toMatch(<span class="str">/^\d{4}-\d{2}-\d{2}T/</span>); <span class="cm">// ISO date</span>
+});</code></pre>
+                </div>
+
+                <div class="callout tip">
+                    <strong>💡 SDET Pro Tip:</strong> Define all your API contracts as TypeScript interfaces.
+                    When the backend changes a field, your tests <em>fail at compile time</em> instead of silently passing
+                    with <code>undefined</code> values. This is a game-changer for API test maintenance.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // ──────────────── Toggle Sections ────────────────
+        function toggleSection(header) {
+            const body = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                if (icon) icon.textContent = '▼';
+            } else {
+                body.classList.add('collapsed');
+                if (icon) icon.textContent = '▶';
+            }
+        }
+
+        // ──────────────── Hamburger Menu ────────────────
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+        // Close menu on link click (mobile)
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // ──────────────── Copy Code Button ────────────────
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const pre = codeBlock.querySelector('pre');
+            const code = pre.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.color = '#3fb950';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.color = '';
+                }, 1800);
+            }).catch(() => {
+                btn.textContent = '❌ Failed';
+                setTimeout(() => { btn.textContent = '📋 Copy'; }, 1500);
+            });
+        }
+
+        // ──────────────── Back to Top ────────────────
+        const backToTopBtn = document.getElementById('backToTop');
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateBackToTop() {
+            if (window.scrollY > 500) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }
+        window.addEventListener('scroll', updateBackToTop, { passive: true });
+
+        // ──────────────── Highlight Active Nav Link ────────────────
+        const allSections = document.querySelectorAll('.section[id]');
+        const allNavAnchors = document.querySelectorAll('.nav-links a');
+
+        function updateActiveNav() {
+            let currentId = '';
+            allSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 120) {
+                    currentId = section.id;
+                }
+            });
+            allNavAnchors.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href') === '#' + currentId) {
+                    a.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+        // ──────────────── Initial State ────────────────
+        // All sections start expanded
+        updateBackToTop();
+    </script>
+</body>
+</html>
